@@ -7,15 +7,35 @@ import {
   deletePaymentController,
   getPaymentByManagerIdController,
 } from "../controllers/index.js";
-import { authenticate } from "../middleware/auth.middleware.js";
+import { authenticate, authorizeRoles } from "../middleware/auth.middleware.js";
 
 const paymentRouter = express.Router();
 
 paymentRouter.post("/", authenticate, savePaymentController);
-paymentRouter.put("/:id", updatePaymentController);
-paymentRouter.delete("/:id", deletePaymentController);
+paymentRouter.put(
+  "/:id",
+  authenticate,
+  authorizeRoles("SITE_MANAGER", "SENIOR", "PROCUREMENT"),
+  updatePaymentController,
+);
+paymentRouter.delete(
+  "/:id",
+  authenticate,
+  authorizeRoles("SITE_MANAGER", "SENIOR", "PROCUREMENT"),
+  deletePaymentController,
+);
 paymentRouter.get("/manager", authenticate, getPaymentByManagerIdController);
-paymentRouter.get("/:id", getPaymentByIdController);
-paymentRouter.get("/", getPaymentController);
+paymentRouter.get(
+  "/:id",
+  authenticate,
+  authorizeRoles("SITE_MANAGER", "SENIOR", "PROCUREMENT"),
+  getPaymentByIdController,
+);
+paymentRouter.get(
+  "/",
+  authenticate,
+  authorizeRoles("SITE_MANAGER", "SENIOR", "PROCUREMENT"),
+  getPaymentController,
+);
 
 export default paymentRouter;
