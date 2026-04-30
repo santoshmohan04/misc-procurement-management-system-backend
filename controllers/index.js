@@ -5,3 +5,4 @@ export * from "./delivery.controller.js";
 export * from "./product.controller.js";
 export * from "./deliveryAdvice.controller.js";
 export * from "./payment.controller.js";
+export * from "./dashboard.controller.js";

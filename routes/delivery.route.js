@@ -7,12 +7,19 @@ import {
   getOrdersNewManagerController,
   getOrdersNewSupplierController,
   getSingleOrderController,
+  bulkUpdateOrdersController,
 } from "../controllers/index.js";
 import { authenticate, authorizeRoles } from "../middleware/auth.middleware.js";
 
 const orderNewRouter = express.Router();
 
 orderNewRouter.post("/", authenticate, saveOrderNewController);
+orderNewRouter.post(
+  "/bulk-update",
+  authenticate,
+  authorizeRoles("SITE_MANAGER", "SENIOR", "PROCUREMENT"),
+  bulkUpdateOrdersController,
+);
 orderNewRouter.put(
   "/:id",
   authenticate,

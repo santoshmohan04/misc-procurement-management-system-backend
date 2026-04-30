@@ -12,6 +12,7 @@ const UserSchema = new Schema({
   role: String,
   siteName: String,
   supplier: String,
+  refreshToken: String,
 });
 
 export const User = mongoose.model("User", UserSchema);

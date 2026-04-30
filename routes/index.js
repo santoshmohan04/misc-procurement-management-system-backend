@@ -6,6 +6,7 @@ import orderNewRouter from "./delivery.route.js";
 import deliveryAdviceRouter from "./deliveryAdvice.route.js";
 import productRouter from "./product.route.js";
 import paymentRouter from "./payment.route.js";
+import dashboardRouter from "./dashboard.route.js";
 
 const apiRouter = express.Router();
 
@@ -16,5 +17,6 @@ apiRouter.use("/orderNew", orderNewRouter);
 apiRouter.use("/deliveryAdvice", deliveryAdviceRouter);
 apiRouter.use("/product", productRouter);
 apiRouter.use("/payment", paymentRouter);
+apiRouter.use("/dashboard", dashboardRouter);
 
 export default apiRouter;

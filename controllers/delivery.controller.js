@@ -6,6 +6,7 @@ import {
   getNewOrderForManagerService,
   getNewOrderForSupplierService,
   getSingleOrderService,
+  bulkUpdateOrdersService,
 } from "../services/index.js";
 import Success from "../utils/success.js";
 
@@ -39,8 +40,14 @@ export const deleteNewOrderController = async (req, res) => {
 
 export const getOrdersNewController = async (req, res) => {
   try {
-    const orders = await getNewOrdersService();
-    res.json(Success(orders, "Successfully orders fetched."));
+    const page = Math.max(1, parseInt(req.query.page, 10) || 1);
+    const limit = Math.min(
+      100,
+      Math.max(1, parseInt(req.query.limit, 10) || 10),
+    );
+    const { search } = req.query;
+    const result = await getNewOrdersService({ page, limit, search });
+    res.json(Success(result, "Successfully orders fetched."));
   } catch (err) {
     res.status(err.status).json(err.message);
   }
@@ -72,5 +79,20 @@ export const getSingleOrderController = async (req, res) => {
     res.json(Success(order, "Successfully orders fetched."));
   } catch (err) {
     res.status(err.status).json(err.message);
+  }
+};
+
+export const bulkUpdateOrdersController = async (req, res) => {
+  try {
+    const { ids, update } = req.body;
+    if (!Array.isArray(ids) || ids.length === 0 || !update) {
+      return res
+        .status(400)
+        .json("ids (array) and update (object) are required.");
+    }
+    const result = await bulkUpdateOrdersService(ids, update);
+    return res.json(Success(result, "Successfully bulk updated orders."));
+  } catch (err) {
+    return res.status(err.status).json(err.message);
   }
 };
