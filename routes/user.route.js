@@ -9,15 +9,25 @@ import {
   updateUserController,
   deleteUserController,
 } from "../controllers/index.js";
-import { authenticate } from "../middleware/auth.middleware.js";
+import { authenticate, authorizeRoles } from "../middleware/auth.middleware.js";
 
 const userRouter = express.Router();
 
 userRouter.post("/", celebrate({ body: SignupBodySchema }), saveUser);
 userRouter.post("/login", celebrate({ body: LoginBodySchema }), loginUser);
 userRouter.get("/me", authenticate, viewProfile);
-userRouter.get("/", getUsersController);
-userRouter.put("/:id", updateUserController);
-userRouter.delete("/:id", deleteUserController);
+userRouter.get(
+  "/",
+  authenticate,
+  authorizeRoles("SITE_MANAGER", "SENIOR", "PROCUREMENT"),
+  getUsersController,
+);
+userRouter.put("/:id", authenticate, updateUserController);
+userRouter.delete(
+  "/:id",
+  authenticate,
+  authorizeRoles("SITE_MANAGER", "SENIOR"),
+  deleteUserController,
+);
 
 export default userRouter;

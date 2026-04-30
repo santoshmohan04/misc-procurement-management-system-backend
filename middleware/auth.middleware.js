@@ -16,3 +16,12 @@ export const authenticate = async (req, res, next) => {
     res.status(401).send("Unauthorized");
   }
 };
+
+export const authorizeRoles =
+  (...roles) =>
+  (req, res, next) => {
+    if (!req.user || !roles.includes(req.user.role)) {
+      return res.status(403).send("Forbidden");
+    }
+    return next();
+  };

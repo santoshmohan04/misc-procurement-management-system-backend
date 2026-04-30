@@ -4,9 +4,8 @@ export const CreateOrderBodySchema = Joi.object({
   orderType: Joi.string().required(),
   description: Joi.string().required(),
   items: Joi.array().items({
-    name: Joi.string().required(),
-    measuringUnit: Joi.string().required(),
-    quantity: Joi.number().required(),
+    productId: Joi.string().length(24).hex().required(),
+    qty: Joi.number().required(),
   }),
   status: Joi.string().valid("PLACED").required(),
   requiredDate: Joi.date().required(),
@@ -22,9 +21,8 @@ export const UpdateOrderBodySchema = Joi.object({
   orderType: Joi.string().optional(),
   description: Joi.string().optional(),
   items: Joi.array().items({
-    name: Joi.string().optional(),
-    measuringUnit: Joi.string().optional(),
-    quantity: Joi.number().optional(),
+    productId: Joi.string().length(24).hex().optional(),
+    qty: Joi.number().optional(),
     available: Joi.string().valid("PENDING", "No", "YES").optional(),
     deliveredQuantity: Joi.number().optional(),
   }),
@@ -36,5 +34,6 @@ export const UpdateOrderBodySchema = Joi.object({
   supplier: Joi.string().length(24).hex().optional(),
   deliveryAddress: Joi.string().optional(),
   deliveredDate: Joi.date().optional(),
+  rejectionNote: Joi.string().optional(),
   isReceiptPrinted: Joi.boolean().optional(),
 });

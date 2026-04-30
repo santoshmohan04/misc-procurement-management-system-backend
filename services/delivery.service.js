@@ -12,23 +12,21 @@ import AppError from "../utils/appError.js";
 export const saveOrderNewService = async (data, managerID) => {
   const {
     orderType,
-    itemName,
-    measuringUnit,
-    quantity,
+    items,
     description,
-    supplierID,
+    supplier,
     requiredDate,
+    deliveryAddress,
   } = data;
   try {
     const order = await createNewOrder({
-      managerID,
+      manager: managerID,
       orderType,
-      itemName,
-      measuringUnit,
-      quantity,
+      items,
       description,
-      supplierID,
+      supplier,
       requiredDate,
+      deliveryAddress,
     });
     return Promise.resolve(order);
   } catch (err) {

@@ -7,9 +7,11 @@ const OrderSchema = new Schema({
   description: String,
   items: [
     {
-      name: String,
-      measuringUnit: String,
-      quantity: Number,
+      productId: {
+        type: Schema.Types.ObjectId,
+        ref: "Product",
+      },
+      qty: Number,
       available: {
         type: String,
         default: "PENDING",
@@ -36,6 +38,10 @@ const OrderSchema = new Schema({
   },
   deliveryAddress: String,
   deliveredDate: Date,
+  rejectionNote: {
+    type: String,
+    default: "Order was not rejected",
+  },
   isReceiptPrinted: {
     type: Boolean,
     default: false,
