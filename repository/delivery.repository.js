@@ -55,7 +55,7 @@ export const getNewOrder = (id) =>
     });
 
 export const updateOrderNew = (orderId, data) =>
-  Order.findByIdAndUpdate(orderId, data, { new: true })
+  Order.findByIdAndUpdate(orderId, { $set: data }, { new: true })
     .then((order) => {
       return Promise.resolve(order);
     })

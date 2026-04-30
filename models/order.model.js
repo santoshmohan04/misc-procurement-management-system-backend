@@ -40,7 +40,7 @@ const OrderSchema = new Schema({
   deliveredDate: Date,
   rejectionNote: {
     type: String,
-    default: "Order didn't rejected",
+    default: "Order was not rejected",
   },
   isReceiptPrinted: {
     type: Boolean,
