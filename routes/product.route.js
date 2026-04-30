@@ -23,7 +23,7 @@ productRouter.delete(
   authorizeRoles("SITE_MANAGER", "SENIOR", "PROCUREMENT", "SUPPLIER"),
   deleteProductController,
 );
-productRouter.get("/", getProductController);
+productRouter.get("/", authenticate, getProductController);
 productRouter.get("/supplier", authenticate, getProductSupplierController);
 
 export default productRouter;

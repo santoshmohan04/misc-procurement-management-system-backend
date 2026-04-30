@@ -25,8 +25,13 @@ orderNewRouter.delete(
   authorizeRoles("SITE_MANAGER", "SENIOR", "PROCUREMENT"),
   deleteNewOrderController,
 );
-orderNewRouter.get("/single/:id", getSingleOrderController);
-orderNewRouter.get("/", getOrdersNewController);
+orderNewRouter.get("/single/:id", authenticate, getSingleOrderController);
+orderNewRouter.get(
+  "/",
+  authenticate,
+  authorizeRoles("SITE_MANAGER", "SENIOR", "PROCUREMENT"),
+  getOrdersNewController,
+);
 orderNewRouter.get("/manager", authenticate, getOrdersNewManagerController);
 orderNewRouter.get("/supplier", authenticate, getOrdersNewSupplierController);
 
