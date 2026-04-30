@@ -34,7 +34,16 @@ export const getNewOrdersForSupplier = (id) =>
 
 export const getNewOrders = async ({ page = 1, limit = 10, search } = {}) => {
   try {
-    const query = search ? { $text: { $search: search } } : {};
+    const sanitizedSearch =
+      search && typeof search === "string"
+        ? search
+            .replace(/['"\\]/g, "")
+            .trim()
+            .slice(0, 200)
+        : null;
+    const query = sanitizedSearch
+      ? { $text: { $search: sanitizedSearch } }
+      : {};
     const skip = (page - 1) * limit;
     const [orders, total] = await Promise.all([
       Order.find(query)
@@ -87,12 +96,28 @@ export const deleteOrderNew = (orderId) =>
 
 export const bulkUpdateOrders = async (ids, update) => {
   try {
+    const ALLOWED_FIELDS = [
+      "approval",
+      "status",
+      "rejectionNote",
+      "requiredDate",
+      "deliveryAddress",
+      "deliveredDate",
+      "isReceiptPrinted",
+    ];
+    const safeUpdate = Object.fromEntries(
+      Object.entries(update).filter(([key]) => ALLOWED_FIELDS.includes(key)),
+    );
+    if (Object.keys(safeUpdate).length === 0) {
+      throw new AppError("No valid fields provided for update.", 400);
+    }
     const result = await Order.updateMany(
       { _id: { $in: ids } },
-      { $set: update },
+      { $set: safeUpdate },
     );
     return Promise.resolve(result);
-  } catch {
+  } catch (err) {
+    if (err.status) throw err;
     throw new AppError("Internal server error.", 500);
   }
 };

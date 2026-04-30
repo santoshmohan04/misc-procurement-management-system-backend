@@ -40,8 +40,11 @@ export const deleteNewOrderController = async (req, res) => {
 
 export const getOrdersNewController = async (req, res) => {
   try {
-    const page = parseInt(req.query.page, 10) || 1;
-    const limit = parseInt(req.query.limit, 10) || 10;
+    const page = Math.max(1, parseInt(req.query.page, 10) || 1);
+    const limit = Math.min(
+      100,
+      Math.max(1, parseInt(req.query.limit, 10) || 10),
+    );
     const { search } = req.query;
     const result = await getNewOrdersService({ page, limit, search });
     res.json(Success(result, "Successfully orders fetched."));

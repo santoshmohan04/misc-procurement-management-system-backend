@@ -88,15 +88,16 @@ export const refreshTokenSrv = async (refreshToken) => {
       refreshToken,
       process.env.JWT_REFRESH_SECRET || process.env.JWT_SECRET,
     );
-    const user = await getUser({ _id: decoded._id });
-    if (!user) {
+    const storedUser = await getUser({ _id: decoded._id });
+    if (!storedUser) {
       throw new AppError("User not found.", 404);
     }
-    const storedUser = await loginUser(user.email);
-    if (!storedUser || storedUser.refreshToken !== refreshToken) {
+    // getUser selects -password; we need refreshToken field so fetch via loginUser by email
+    const userWithToken = await loginUser(storedUser.email);
+    if (!userWithToken || userWithToken.refreshToken !== refreshToken) {
       throw new AppError("Invalid refresh token.", 401);
     }
-    const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
+    const token = jwt.sign({ _id: storedUser._id }, process.env.JWT_SECRET, {
       expiresIn: "1h",
     });
     return Promise.resolve({ token });
