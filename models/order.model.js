@@ -48,4 +48,10 @@ const OrderSchema = new Schema({
   },
 });
 
+OrderSchema.index({
+  description: "text",
+  orderType: "text",
+  deliveryAddress: "text",
+});
+
 export const Order = mongoose.model("Order", OrderSchema);

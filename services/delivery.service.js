@@ -6,6 +6,7 @@ import {
   updateOrderNew,
   deleteOrderNew,
   getNewOrder,
+  bulkUpdateOrders,
 } from "../repository/index.js";
 import AppError from "../utils/appError.js";
 
@@ -52,10 +53,10 @@ export const deleteOrderNewService = async (id) => {
   }
 };
 
-export const getNewOrdersService = async () => {
+export const getNewOrdersService = async ({ page, limit, search } = {}) => {
   try {
-    const orders = await getNewOrders();
-    return Promise.resolve(orders);
+    const result = await getNewOrders({ page, limit, search });
+    return Promise.resolve(result);
   } catch (err) {
     throw new AppError(err.message, err.status);
   }
@@ -83,6 +84,15 @@ export const getSingleOrderService = async (id) => {
   try {
     const order = await getNewOrder(id);
     return Promise.resolve(order);
+  } catch (err) {
+    throw new AppError(err.message, err.status);
+  }
+};
+
+export const bulkUpdateOrdersService = async (ids, update) => {
+  try {
+    const result = await bulkUpdateOrders(ids, update);
+    return Promise.resolve(result);
   } catch (err) {
     throw new AppError(err.message, err.status);
   }

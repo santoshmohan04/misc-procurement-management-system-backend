@@ -19,6 +19,7 @@ const apiLimiter = rateLimit({
   legacyHeaders: false,
 });
 app.use("/api", apiLimiter);
+app.use("/api/v1", apiLimiter);
 
 connect();
 
@@ -27,6 +28,7 @@ app.set("view engine", "pug");
 app.use(express.static("public"));
 
 app.use("/api", apiRouter);
+app.use("/api/v1", apiRouter);
 
 app.get("/", (req, res) => {
   res.render("index");

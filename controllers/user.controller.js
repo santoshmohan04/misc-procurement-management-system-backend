@@ -4,6 +4,7 @@ import {
   getUsersSrv,
   updateUserSrv,
   deleteUserSrv,
+  refreshTokenSrv,
 } from "../services/index.js";
 import Success from "../utils/success.js";
 
@@ -57,5 +58,18 @@ export const deleteUserController = async (req, res) => {
     res.json(Success(user, "Successfully user Deleted."));
   } catch (err) {
     res.status(err.status).json(err.message);
+  }
+};
+
+export const refreshTokenController = async (req, res) => {
+  try {
+    const { refreshToken } = req.body;
+    if (!refreshToken) {
+      return res.status(400).json("refreshToken is required.");
+    }
+    const result = await refreshTokenSrv(refreshToken);
+    return res.json(Success(result, "Token refreshed successfully."));
+  } catch (err) {
+    return res.status(err.status || 401).json(err.message);
   }
 };

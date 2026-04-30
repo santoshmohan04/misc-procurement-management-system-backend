@@ -5,3 +5,4 @@ export * from "./delivery.service.js";
 export * from "./product.service.js";
 export * from "./deliveryAdvice.service.js";
 export * from "./payment.service.js";
+export * from "./dashboard.service.js";

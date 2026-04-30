@@ -41,7 +41,13 @@ export const login = async (data) => {
         const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
           expiresIn: "1h",
         });
-        return Promise.resolve({ token });
+        const refreshToken = jwt.sign(
+          { _id: user._id },
+          process.env.JWT_REFRESH_SECRET || process.env.JWT_SECRET,
+          { expiresIn: "7d" },
+        );
+        await updateUser(user._id, { refreshToken });
+        return Promise.resolve({ token, refreshToken });
       }
     }
   } catch (err) {
@@ -73,5 +79,29 @@ export const deleteUserSrv = async (id) => {
     return Promise.resolve(user);
   } catch (err) {
     throw new AppError(err.message, err.status);
+  }
+};
+
+export const refreshTokenSrv = async (refreshToken) => {
+  try {
+    const decoded = jwt.verify(
+      refreshToken,
+      process.env.JWT_REFRESH_SECRET || process.env.JWT_SECRET,
+    );
+    const user = await getUser({ _id: decoded._id });
+    if (!user) {
+      throw new AppError("User not found.", 404);
+    }
+    const storedUser = await loginUser(user.email);
+    if (!storedUser || storedUser.refreshToken !== refreshToken) {
+      throw new AppError("Invalid refresh token.", 401);
+    }
+    const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "1h",
+    });
+    return Promise.resolve({ token });
+  } catch (err) {
+    if (err.status) throw err;
+    throw new AppError("Invalid or expired refresh token.", 401);
   }
 };
