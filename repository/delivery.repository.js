@@ -1,8 +1,8 @@
-import { OrderNew } from "../models/index.js";
+import { Order } from "../models/index.js";
 import AppError from "../utils/appError.js";
 
 export const createNewOrder = (data) =>
-  OrderNew.create(data)
+  Order.create(data)
     .then((order) => {
       return Promise.resolve(order);
     })
@@ -11,25 +11,31 @@ export const createNewOrder = (data) =>
     });
 
 export const getNewOrdersForManager = (id) =>
-  OrderNew.find({ managerID: id })
-    .then((order) => {
-      return Promise.resolve(order);
+  Order.find({ manager: id })
+    .populate("manager")
+    .populate("supplier")
+    .then((orders) => {
+      return Promise.resolve(orders);
     })
     .catch(() => {
       throw new AppError("Internal server error.", 500);
     });
 
 export const getNewOrdersForSupplier = (id) =>
-  OrderNew.find({ supplierID: id })
-    .then((order) => {
-      return Promise.resolve(order);
+  Order.find({ supplier: id })
+    .populate("manager")
+    .populate("supplier")
+    .then((orders) => {
+      return Promise.resolve(orders);
     })
     .catch(() => {
       throw new AppError("Internal server error.", 500);
     });
 
 export const getNewOrders = () =>
-  OrderNew.find()
+  Order.find()
+    .populate("manager")
+    .populate("supplier")
     .then((orders) => {
       return Promise.resolve(orders);
     })
@@ -38,7 +44,9 @@ export const getNewOrders = () =>
     });
 
 export const getNewOrder = (id) =>
-  OrderNew.findById(id)
+  Order.findById(id)
+    .populate("manager")
+    .populate("supplier")
     .then((order) => {
       return Promise.resolve(order);
     })
@@ -47,7 +55,7 @@ export const getNewOrder = (id) =>
     });
 
 export const updateOrderNew = (orderId, data) =>
-  OrderNew.findByIdAndUpdate(orderId, data, { new: true })
+  Order.findByIdAndUpdate(orderId, data, { new: true })
     .then((order) => {
       return Promise.resolve(order);
     })
@@ -56,7 +64,7 @@ export const updateOrderNew = (orderId, data) =>
     });
 
 export const deleteOrderNew = (orderId) =>
-  OrderNew.findByIdAndDelete(orderId)
+  Order.findByIdAndDelete(orderId)
     .then((order) => {
       return Promise.resolve(order);
     })
