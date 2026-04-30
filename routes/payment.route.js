@@ -26,16 +26,16 @@ paymentRouter.delete(
 );
 paymentRouter.get("/manager", authenticate, getPaymentByManagerIdController);
 paymentRouter.get(
-  "/:id",
-  authenticate,
-  authorizeRoles("SITE_MANAGER", "SENIOR", "PROCUREMENT"),
-  getPaymentByIdController,
-);
-paymentRouter.get(
   "/",
   authenticate,
   authorizeRoles("SITE_MANAGER", "SENIOR", "PROCUREMENT"),
   getPaymentController,
+);
+paymentRouter.get(
+  "/:id",
+  authenticate,
+  authorizeRoles("SITE_MANAGER", "SENIOR", "PROCUREMENT"),
+  getPaymentByIdController,
 );
 
 export default paymentRouter;
