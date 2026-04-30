@@ -54,7 +54,7 @@ Request → Route → (celebrate validation) → (auth middleware) → Controlle
 - **Mechanism:** JWT (JSON Web Tokens) via `Bearer` token in the `Authorization` header
 - **Flow:**
   1. `POST /api/user` — Register (password bcrypt-hashed before storage)
-  2. `POST /api/user/login` — Returns a signed JWT token
+  2. `POST /api/user/login` — Returns a signed JWT token (expires in **1 hour**)
   3. Protected routes use the `authenticate` middleware, which:
      - Strips `Bearer ` from the header
      - Verifies the JWT using `JWT_SECRET` env variable
@@ -78,81 +78,81 @@ All routes are prefixed with `/api`.
 
 ### 👤 Users — `/api/user`
 
-| Method | Path | Auth | Description |
-|---|---|---|---|
-| POST | `/` | ❌ | Register new user |
-| POST | `/login` | ❌ | Login, returns JWT |
-| GET | `/me` | ✅ | View own profile |
-| GET | `/` | ❌ | List all users |
-| PUT | `/:id` | ❌ | Update user |
-| DELETE | `/:id` | ❌ | Delete user |
+| Method | Path | Auth | Roles | Description |
+|---|---|---|---|---|
+| POST | `/` | ❌ | — | Register new user |
+| POST | `/login` | ❌ | — | Login, returns JWT |
+| GET | `/me` | ✅ | any | View own profile |
+| GET | `/` | ✅ | SITE_MANAGER, SENIOR, PROCUREMENT | List all users |
+| PUT | `/:id` | ✅ | any | Update user |
+| DELETE | `/:id` | ✅ | SITE_MANAGER, SENIOR | Delete user |
 
 **User roles:** `SITE_MANAGER`, `PROCUREMENT`, `SENIOR`, `SUPPLIER`  
 **Departments:** `PROCUREMENT`, `MANAGEMENT`, `ONSITE`, `OTHER`
 
 ### 🏭 Suppliers — `/api/supplier`
 
-| Method | Path | Auth | Description |
-|---|---|---|---|
-| POST | `/` | ✅ | Create supplier |
-| GET | `/` | ✅ | List all suppliers |
-| GET | `/:supplierId` | ✅ | Get supplier by ID |
-| PUT | `/:supplierId` | ✅ | Update supplier |
-| DELETE | `/:supplierId` | ✅ | Delete supplier |
+| Method | Path | Auth | Roles | Description |
+|---|---|---|---|---|
+| POST | `/` | ✅ | any | Create supplier |
+| GET | `/` | ✅ | any | List all suppliers |
+| GET | `/:supplierId` | ✅ | any | Get supplier by ID |
+| PUT | `/:supplierId` | ✅ | any | Update supplier |
+| DELETE | `/:supplierId` | ✅ | any | Delete supplier |
 
 ### 📋 Orders (legacy) — `/api/order`
 
-| Method | Path | Auth | Description |
-|---|---|---|---|
-| POST | `/` | ✅ | Create order |
-| GET | `/` | ✅ | List all orders |
-| GET | `/:orderId` | ✅ | Get order |
-| PUT | `/:orderId` | ✅ | Update order |
-| DELETE | `/:orderId` | ✅ | Delete order |
+| Method | Path | Auth | Roles | Description |
+|---|---|---|---|---|
+| POST | `/` | ✅ | any | Create order |
+| GET | `/` | ✅ | any | List all orders |
+| GET | `/:orderId` | ✅ | any | Get order |
+| PUT | `/:orderId` | ✅ | any | Update order |
+| DELETE | `/:orderId` | ✅ | any | Delete order |
 
 ### 📦 Orders (new/active) — `/api/orderNew`
 
-| Method | Path | Auth | Description |
-|---|---|---|---|
-| POST | `/` | ✅ | Create order |
-| GET | `/` | ❌ | List all orders |
-| GET | `/single/:id` | ❌ | Get single order |
-| GET | `/manager` | ✅ | Orders for logged-in manager |
-| GET | `/supplier` | ✅ | Orders for logged-in supplier |
-| PUT | `/:id` | ❌ | Update order |
-| DELETE | `/:id` | ❌ | Delete order |
+| Method | Path | Auth | Roles | Description |
+|---|---|---|---|---|
+| POST | `/` | ✅ | any | Create order |
+| GET | `/` | ✅ | SITE_MANAGER, SENIOR, PROCUREMENT | List all orders |
+| GET | `/single/:id` | ✅ | any | Get single order |
+| GET | `/manager` | ✅ | any | Orders for logged-in manager |
+| GET | `/supplier` | ✅ | any | Orders for logged-in supplier |
+| PUT | `/:id` | ✅ | SITE_MANAGER, SENIOR, PROCUREMENT, SUPPLIER | Update order |
+| DELETE | `/:id` | ✅ | SITE_MANAGER, SENIOR, PROCUREMENT | Delete order |
 
 ### 🚚 Delivery Advice — `/api/deliveryAdvice`
 
-| Method | Path | Auth | Description |
-|---|---|---|---|
-| POST | `/` | ✅ | Create delivery advice |
-| GET | `/` | ❌ | List all |
-| GET | `/manager` | ✅ | Filtered by manager |
-| GET | `/supplier` | ✅ | Filtered by supplier |
-| PUT | `/:id` | ❌ | Update |
-| DELETE | `/:id` | ❌ | Delete |
+| Method | Path | Auth | Roles | Description |
+|---|---|---|---|---|
+| POST | `/` | ✅ | any | Create delivery advice |
+| GET | `/` | ✅ | SITE_MANAGER, SENIOR, PROCUREMENT, SUPPLIER | List all |
+| GET | `/manager` | ✅ | any | Filtered by manager |
+| GET | `/supplier` | ✅ | any | Filtered by supplier |
+| PUT | `/:id` | ✅ | SITE_MANAGER, SENIOR, PROCUREMENT, SUPPLIER | Update |
+| DELETE | `/:id` | ✅ | SITE_MANAGER, SENIOR, PROCUREMENT | Delete |
 
 ### 🛒 Products — `/api/product`
 
-| Method | Path | Auth | Description |
-|---|---|---|---|
-| POST | `/` | ✅ | Create product |
-| GET | `/` | ❌ | List all products |
-| GET | `/supplier` | ✅ | Products for logged-in supplier |
-| PUT | `/:id` | ❌ | Update product |
-| DELETE | `/:id` | ❌ | Delete product |
+| Method | Path | Auth | Roles | Description |
+|---|---|---|---|---|
+| POST | `/` | ✅ | any | Create product |
+| GET | `/` | ✅ | any | List all products |
+| GET | `/supplier` | ✅ | any | Products for logged-in supplier |
+| PUT | `/:id` | ✅ | SITE_MANAGER, SENIOR, PROCUREMENT, SUPPLIER | Update product |
+| DELETE | `/:id` | ✅ | SITE_MANAGER, SENIOR, PROCUREMENT, SUPPLIER | Delete product |
 
 ### 💳 Payments — `/api/payment`
 
-| Method | Path | Auth | Description |
-|---|---|---|---|
-| POST | `/` | ✅ | Create payment |
-| GET | `/` | ❌ | List all payments |
-| GET | `/manager` | ✅ | Payments by logged-in manager |
-| GET | `/:id` | ❌ | Get payment by ID |
-| PUT | `/:id` | ❌ | Update payment |
-| DELETE | `/:id` | ❌ | Delete payment |
+| Method | Path | Auth | Roles | Description |
+|---|---|---|---|---|
+| POST | `/` | ✅ | any | Create payment |
+| GET | `/` | ✅ | SITE_MANAGER, SENIOR, PROCUREMENT | List all payments |
+| GET | `/manager` | ✅ | any | Payments by logged-in manager |
+| GET | `/:id` | ✅ | SITE_MANAGER, SENIOR, PROCUREMENT | Get payment by ID |
+| PUT | `/:id` | ✅ | SITE_MANAGER, SENIOR, PROCUREMENT | Update payment |
+| DELETE | `/:id` | ✅ | SITE_MANAGER, SENIOR, PROCUREMENT | Delete payment |
 
 ---
 
@@ -162,10 +162,9 @@ All routes are prefixed with `/api`.
 |---|---|
 | **User** | name, nic, email, mobile, department, password (hashed), role, siteName, supplier |
 | **Supplier** | name, mobile, email, company, address |
-| **Order** (legacy) | orderType, items[], approval, status, requiredDate, manager (ref), supplier (ref) |
-| **OrderNew** | orderType, itemName, quantity, approval, status, managerID, supplierID, rejectionNote |
-| **DeliveryAdvice** | orderID, deliveryItems, deliveredDate, quantity, unitPrice, total, supplierID, managerID |
-| **Product** | itemName, itemBrand, image, availableQty, price, inStock, supplierID |
+| **Order** | orderType, description, items[], approval, status, requiredDate, deliveryAddress, deliveredDate, rejectionNote, isReceiptPrinted, manager (ref User), supplier (ref Supplier) |
+| **DeliveryAdvice** | orderID, deliveryItems, deliveredDate, quantity, description, unitPrice, total, supplierID, managerID |
+| **Product** | itemName, title, itemBrand, image, description, measuringUnit, availableQty, price, inStock, supplierID |
 | **Payment** | paymentName, paymentType, paymentAmount, paymentStatus, managerID (+ timestamps) |
 
 ---
@@ -183,8 +182,8 @@ The API is designed to be consumed by a **separate frontend SPA** (React/Angular
 
 ## ⚠️ Notable Observations
 
-1. **Inconsistent auth coverage** — Some mutating routes (PUT/DELETE on orders, products, payments) don't require auth, which could be intentional for rapid development but is a security gap.
-2. **Two Order models** — `Order` (legacy, with ObjectId refs to Supplier/User) and `OrderNew` (flat string IDs) — suggesting the system was partially refactored.
-3. **No token expiry** — JWT tokens are signed without an `expiresIn` option, meaning they never expire.
+1. **Consistent auth coverage** — All routes require authentication (`authenticate` middleware). Many mutating and sensitive read routes also enforce role-based access via `authorizeRoles`.
+2. **Single Order model** — The separate `OrderNew` model has been removed. The `/api/orderNew` routes now use the normalized `Order` model (ObjectId refs for `manager` and `supplier`), matching the legacy `/api/order` routes. The "OrderNew" route prefix is retained for backward compatibility.
+3. **JWT token expiry** — Tokens are signed with `expiresIn: "1h"` and require re-authentication after expiry.
 4. **Request body size** — Allows up to 50MB (likely for base64 product images).
 5. **Tests** are organized into `unit/`, `intergration/` (sic), and `functional/` directories.
