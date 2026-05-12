@@ -1,5 +1,7 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import crypto from "crypto";
+import nodemailer from "nodemailer";
 import {
   saveUser,
   loginUser,
@@ -104,5 +106,76 @@ export const refreshTokenSrv = async (refreshToken) => {
   } catch (err) {
     if (err.status) throw err;
     throw new AppError("Invalid or expired refresh token.", 401);
+  }
+};
+
+export const forgotPasswordSrv = async (email) => {
+  try {
+    const user = await loginUser(email);
+    if (!user) {
+      throw new AppError("User not found.", 404);
+    }
+
+    const resetToken = crypto.randomBytes(32).toString("hex");
+    const passwordResetToken = crypto
+      .createHash("sha256")
+      .update(resetToken)
+      .digest("hex");
+    const passwordResetExpires = Date.now() + 10 * 60 * 1000; // 10 minutes
+
+    await updateUser(user._id, {
+      resetPasswordToken: passwordResetToken,
+      resetPasswordExpires: passwordResetExpires,
+    });
+
+    const resetURL = `${
+      process.env.CLIENT_URL || "http://localhost:3000"
+    }/reset-password/${resetToken}`;
+
+    const transporter = nodemailer.createTransport({
+      service: process.env.EMAIL_SERVICE || "gmail",
+      auth: {
+        user: process.env.EMAIL_USERNAME,
+        pass: process.env.EMAIL_PASSWORD,
+      },
+    });
+
+    await transporter.sendMail({
+      from: process.env.EMAIL_FROM || "noreply@example.com",
+      to: user.email,
+      subject: "Password Reset Request",
+      text: `You requested a password reset. Please click on the link to reset your password: \n\n ${resetURL}`,
+    });
+
+    return Promise.resolve("Password reset link sent to your email.");
+  } catch (err) {
+    throw new AppError(err.message, err.status || 500);
+  }
+};
+
+export const resetPasswordSrv = async (token, newPassword) => {
+  try {
+    const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
+    const user = await getUser({
+      resetPasswordToken: hashedToken,
+      resetPasswordExpires: { $gt: Date.now() },
+    });
+
+    if (!user) {
+      throw new AppError("Token is invalid or has expired.", 400);
+    }
+
+    const salt = await bcrypt.genSalt();
+    const hash = await bcrypt.hash(newPassword, salt);
+
+    await updateUser(user._id, {
+      password: hash,
+      resetPasswordToken: undefined,
+      resetPasswordExpires: undefined,
+    });
+
+    return Promise.resolve("Password updated successfully.");
+  } catch (err) {
+    throw new AppError(err.message, err.status || 500);
   }
 };

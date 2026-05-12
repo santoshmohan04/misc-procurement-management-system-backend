@@ -7,9 +7,14 @@ import deliveryAdviceRouter from "./deliveryAdvice.route.js";
 import productRouter from "./product.route.js";
 import paymentRouter from "./payment.route.js";
 import dashboardRouter from "./dashboard.route.js";
+import {
+  forgotPasswordController,
+  resetPasswordController,
+} from "../controllers/user.controller.js";
 
 const apiRouter = express.Router();
-
+apiRouter.post("/forgot-password", forgotPasswordController);
+apiRouter.post("/reset-password", resetPasswordController);
 apiRouter.use("/user", userRouter);
 apiRouter.use("/supplier", supplierRouter);
 apiRouter.use("/order", orderRouter);

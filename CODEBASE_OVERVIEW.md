@@ -9,17 +9,17 @@
 
 ## 🛠️ Key Technologies
 
-| Technology | Purpose |
-|---|---|
-| **Node.js + Express.js** | HTTP server & routing framework |
-| **MongoDB + Mongoose** | Database & ODM (Object Document Mapper) |
-| **bcrypt** | Password hashing |
-| **jsonwebtoken (JWT)** | Authentication tokens |
-| **celebrate + Joi** | Request validation (schema enforcement) |
-| **dotenv** | Environment variable management |
-| **pug** | Server-side HTML templating (minimal — just a health-check landing page) |
-| **ESLint + Prettier + Husky** | Code quality & pre-commit hooks |
-| **Jest + Supertest + Babel** | Testing framework |
+| Technology                    | Purpose                                                                  |
+| ----------------------------- | ------------------------------------------------------------------------ |
+| **Node.js + Express.js**      | HTTP server & routing framework                                          |
+| **MongoDB + Mongoose**        | Database & ODM (Object Document Mapper)                                  |
+| **bcrypt**                    | Password hashing                                                         |
+| **jsonwebtoken (JWT)**        | Authentication tokens                                                    |
+| **celebrate + Joi**           | Request validation (schema enforcement)                                  |
+| **dotenv**                    | Environment variable management                                          |
+| **pug**                       | Server-side HTML templating (minimal — just a health-check landing page) |
+| **ESLint + Prettier + Husky** | Code quality & pre-commit hooks                                          |
+| **Jest + Supertest + Babel**  | Testing framework                                                        |
 
 ---
 
@@ -78,100 +78,101 @@ All routes are prefixed with `/api`.
 
 ### 👤 Users — `/api/user`
 
-| Method | Path | Auth | Roles | Description |
-|---|---|---|---|---|
-| POST | `/` | ❌ | — | Register new user |
-| POST | `/login` | ❌ | — | Login, returns JWT |
-| GET | `/me` | ✅ | any | View own profile |
-| GET | `/` | ✅ | SITE_MANAGER, SENIOR, PROCUREMENT | List all users |
-| PUT | `/:id` | ✅ | any | Update user |
-| DELETE | `/:id` | ✅ | SITE_MANAGER, SENIOR | Delete user |
+| Method | Path     | Auth | Roles                             | Description        |
+| ------ | -------- | ---- | --------------------------------- | ------------------ |
+| POST   | `/`      | ❌   | —                                 | Register new user  |
+| POST   | `/login` | ❌   | —                                 | Login, returns JWT |
+| GET    | `/me`    | ✅   | any                               | View own profile   |
+| GET    | `/`      | ✅   | SITE_MANAGER, SENIOR, PROCUREMENT | List all users     |
+| PUT    | `/:id`   | ✅   | any                               | Update user        |
+| DELETE | `/:id`   | ✅   | SITE_MANAGER, SENIOR              | Delete user        |
 
 **User roles:** `SITE_MANAGER`, `PROCUREMENT`, `SENIOR`, `SUPPLIER`  
 **Departments:** `PROCUREMENT`, `MANAGEMENT`, `ONSITE`, `OTHER`
 
 ### 🏭 Suppliers — `/api/supplier`
 
-| Method | Path | Auth | Roles | Description |
-|---|---|---|---|---|
-| POST | `/` | ✅ | any | Create supplier |
-| GET | `/` | ✅ | any | List all suppliers |
-| GET | `/:supplierId` | ✅ | any | Get supplier by ID |
-| PUT | `/:supplierId` | ✅ | any | Update supplier |
-| DELETE | `/:supplierId` | ✅ | any | Delete supplier |
+| Method | Path           | Auth | Roles | Description        |
+| ------ | -------------- | ---- | ----- | ------------------ |
+| POST   | `/`            | ✅   | any   | Create supplier    |
+| GET    | `/`            | ✅   | any   | List all suppliers |
+| GET    | `/:supplierId` | ✅   | any   | Get supplier by ID |
+| PUT    | `/:supplierId` | ✅   | any   | Update supplier    |
+| DELETE | `/:supplierId` | ✅   | any   | Delete supplier    |
 
 ### 📋 Orders (legacy) — `/api/order`
 
-| Method | Path | Auth | Roles | Description |
-|---|---|---|---|---|
-| POST | `/` | ✅ | any | Create order |
-| GET | `/` | ✅ | any | List all orders |
-| GET | `/:orderId` | ✅ | any | Get order |
-| PUT | `/:orderId` | ✅ | any | Update order |
-| DELETE | `/:orderId` | ✅ | any | Delete order |
+| Method | Path        | Auth | Roles | Description     |
+| ------ | ----------- | ---- | ----- | --------------- |
+| POST   | `/`         | ✅   | any   | Create order    |
+| GET    | `/`         | ✅   | any   | List all orders |
+| GET    | `/:orderId` | ✅   | any   | Get order       |
+| PUT    | `/:orderId` | ✅   | any   | Update order    |
+| DELETE | `/:orderId` | ✅   | any   | Delete order    |
 
 ### 📦 Orders (new/active) — `/api/orderNew`
 
-| Method | Path | Auth | Roles | Description |
-|---|---|---|---|---|
-| POST | `/` | ✅ | any | Create order |
-| GET | `/` | ✅ | SITE_MANAGER, SENIOR, PROCUREMENT | List all orders |
-| GET | `/single/:id` | ✅ | any | Get single order |
-| GET | `/manager` | ✅ | any | Orders for logged-in manager |
-| GET | `/supplier` | ✅ | any | Orders for logged-in supplier |
-| PUT | `/:id` | ✅ | SITE_MANAGER, SENIOR, PROCUREMENT, SUPPLIER | Update order |
-| DELETE | `/:id` | ✅ | SITE_MANAGER, SENIOR, PROCUREMENT | Delete order |
+| Method | Path          | Auth | Roles                                       | Description                   |
+| ------ | ------------- | ---- | ------------------------------------------- | ----------------------------- |
+| POST   | `/`           | ✅   | any                                         | Create order                  |
+| GET    | `/`           | ✅   | SITE_MANAGER, SENIOR, PROCUREMENT           | List all orders               |
+| GET    | `/single/:id` | ✅   | any                                         | Get single order              |
+| GET    | `/manager`    | ✅   | any                                         | Orders for logged-in manager  |
+| GET    | `/supplier`   | ✅   | any                                         | Orders for logged-in supplier |
+| PUT    | `/:id`        | ✅   | SITE_MANAGER, SENIOR, PROCUREMENT, SUPPLIER | Update order                  |
+| DELETE | `/:id`        | ✅   | SITE_MANAGER, SENIOR, PROCUREMENT           | Delete order                  |
 
 ### 🚚 Delivery Advice — `/api/deliveryAdvice`
 
-| Method | Path | Auth | Roles | Description |
-|---|---|---|---|---|
-| POST | `/` | ✅ | any | Create delivery advice |
-| GET | `/` | ✅ | SITE_MANAGER, SENIOR, PROCUREMENT, SUPPLIER | List all |
-| GET | `/manager` | ✅ | any | Filtered by manager |
-| GET | `/supplier` | ✅ | any | Filtered by supplier |
-| PUT | `/:id` | ✅ | SITE_MANAGER, SENIOR, PROCUREMENT, SUPPLIER | Update |
-| DELETE | `/:id` | ✅ | SITE_MANAGER, SENIOR, PROCUREMENT | Delete |
+| Method | Path        | Auth | Roles                                       | Description            |
+| ------ | ----------- | ---- | ------------------------------------------- | ---------------------- |
+| POST   | `/`         | ✅   | any                                         | Create delivery advice |
+| GET    | `/`         | ✅   | SITE_MANAGER, SENIOR, PROCUREMENT, SUPPLIER | List all               |
+| GET    | `/manager`  | ✅   | any                                         | Filtered by manager    |
+| GET    | `/supplier` | ✅   | any                                         | Filtered by supplier   |
+| PUT    | `/:id`      | ✅   | SITE_MANAGER, SENIOR, PROCUREMENT, SUPPLIER | Update                 |
+| DELETE | `/:id`      | ✅   | SITE_MANAGER, SENIOR, PROCUREMENT           | Delete                 |
 
 ### 🛒 Products — `/api/product`
 
-| Method | Path | Auth | Roles | Description |
-|---|---|---|---|---|
-| POST | `/` | ✅ | any | Create product |
-| GET | `/` | ✅ | any | List all products |
-| GET | `/supplier` | ✅ | any | Products for logged-in supplier |
-| PUT | `/:id` | ✅ | SITE_MANAGER, SENIOR, PROCUREMENT, SUPPLIER | Update product |
-| DELETE | `/:id` | ✅ | SITE_MANAGER, SENIOR, PROCUREMENT, SUPPLIER | Delete product |
+| Method | Path        | Auth | Roles                                       | Description                     |
+| ------ | ----------- | ---- | ------------------------------------------- | ------------------------------- |
+| POST   | `/`         | ✅   | any                                         | Create product                  |
+| GET    | `/`         | ✅   | any                                         | List all products               |
+| GET    | `/supplier` | ✅   | any                                         | Products for logged-in supplier |
+| PUT    | `/:id`      | ✅   | SITE_MANAGER, SENIOR, PROCUREMENT, SUPPLIER | Update product                  |
+| DELETE | `/:id`      | ✅   | SITE_MANAGER, SENIOR, PROCUREMENT, SUPPLIER | Delete product                  |
 
 ### 💳 Payments — `/api/payment`
 
-| Method | Path | Auth | Roles | Description |
-|---|---|---|---|---|
-| POST | `/` | ✅ | any | Create payment |
-| GET | `/` | ✅ | SITE_MANAGER, SENIOR, PROCUREMENT | List all payments |
-| GET | `/manager` | ✅ | any | Payments by logged-in manager |
-| GET | `/:id` | ✅ | SITE_MANAGER, SENIOR, PROCUREMENT | Get payment by ID |
-| PUT | `/:id` | ✅ | SITE_MANAGER, SENIOR, PROCUREMENT | Update payment |
-| DELETE | `/:id` | ✅ | SITE_MANAGER, SENIOR, PROCUREMENT | Delete payment |
+| Method | Path       | Auth | Roles                             | Description                   |
+| ------ | ---------- | ---- | --------------------------------- | ----------------------------- |
+| POST   | `/`        | ✅   | any                               | Create payment                |
+| GET    | `/`        | ✅   | SITE_MANAGER, SENIOR, PROCUREMENT | List all payments             |
+| GET    | `/manager` | ✅   | any                               | Payments by logged-in manager |
+| GET    | `/:id`     | ✅   | SITE_MANAGER, SENIOR, PROCUREMENT | Get payment by ID             |
+| PUT    | `/:id`     | ✅   | SITE_MANAGER, SENIOR, PROCUREMENT | Update payment                |
+| DELETE | `/:id`     | ✅   | SITE_MANAGER, SENIOR, PROCUREMENT | Delete payment                |
 
 ---
 
 ## 🗃️ Data Models (MongoDB Collections)
 
-| Model | Key Fields |
-|---|---|
-| **User** | name, nic, email, mobile, department, password (hashed), role, siteName, supplier |
-| **Supplier** | name, mobile, email, company, address |
-| **Order** | orderType, description, items[], approval, status, requiredDate, deliveryAddress, deliveredDate, rejectionNote, isReceiptPrinted, manager (ref User), supplier (ref Supplier) |
-| **DeliveryAdvice** | orderID, deliveryItems, deliveredDate, quantity, description, unitPrice, total, supplierID, managerID |
-| **Product** | itemName, title, itemBrand, image, description, measuringUnit, availableQty, price, inStock, supplierID |
-| **Payment** | paymentName, paymentType, paymentAmount, paymentStatus, managerID (+ timestamps) |
+| Model              | Key Fields                                                                                                                                                                    |
+| ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **User**           | name, nic, email, mobile, department, password (hashed), role, siteName, supplier                                                                                             |
+| **Supplier**       | name, mobile, email, company, address                                                                                                                                         |
+| **Order**          | orderType, description, items[], approval, status, requiredDate, deliveryAddress, deliveredDate, rejectionNote, isReceiptPrinted, manager (ref User), supplier (ref Supplier) |
+| **DeliveryAdvice** | orderID, deliveryItems, deliveredDate, quantity, description, unitPrice, total, supplierID, managerID                                                                         |
+| **Product**        | itemName, title, itemBrand, image, description, measuringUnit, availableQty, price, inStock, supplierID                                                                       |
+| **Payment**        | paymentName, paymentType, paymentAmount, paymentStatus, managerID (+ timestamps)                                                                                              |
 
 ---
 
 ## 🌐 Frontend Consumption
 
 The API is designed to be consumed by a **separate frontend SPA** (React/Angular/etc.):
+
 - **CORS** is enabled globally (`app.use(cors())`), so any origin can call the API
 - All API responses follow a uniform shape: `{ status: 200, data: {...}, message: "..." }`
 - Errors are returned with HTTP status codes and a message string
