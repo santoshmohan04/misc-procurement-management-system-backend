@@ -7,5 +7,5 @@
   "bracketSpacing": true,
   "bracketSameLine": true,
   "trailingComma": "all",
-  "endOfLine": "auto"
+  "endOfLine": "lf"
 }
